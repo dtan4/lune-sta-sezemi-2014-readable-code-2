@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 
+require 'pry'
+
 user = ARGV[0]
 file_name = ARGV[1]
-# id_num_opt = ARGV.size.odd? ? nil : ARGV[ARGV.size -1].to_i
+id_num_opt = ARGV.size.odd? ? ARGV.last.to_i : nil
 
 class RecipeData
   attr_reader :users
@@ -57,6 +59,14 @@ class RecipeData
     @recipes.values.select { |recipe| recipe['user_id'] == user_id }
   end
 
+  def recipe_id_of(recipe_name)
+    @recipes.each do |id, recipe|
+      return id if recipe['name'] == recipe_name
+    end
+
+    -1
+  end
+
   def user_id_of(user_name)
     @users.each do |id, user|
       return id if user['name'] == user_name
@@ -79,7 +89,9 @@ end
 recipes.users.each do |user_id, user|
   puts "ユーザー名: #{user['name']}"
   recipes.recipes_by_user(user_id).each do |recipe|
-    puts "#{recipe['name']} #{recipe['url']}"
+    if id_num_opt.nil? || (recipes.recipe_id_of(recipe['name']) == id_num_opt)
+      puts "#{recipe['name']} #{recipe['url']}"
+    end
   end
   puts ""
 end
