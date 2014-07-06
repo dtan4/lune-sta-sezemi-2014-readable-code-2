@@ -10,8 +10,8 @@ class RecipeData
   attr_reader :users
 
   def initialize
-    @users = {}
-    @recipes = {}
+    @users = []
+    @recipes = []
 
     @last_user_id_num =
     @last_recipe_id_num = 0
@@ -19,7 +19,8 @@ class RecipeData
 
   def add_user(user_name)
     @last_user_id_num += 1
-    @users[@last_user_id_num] = {
+    @users << {
+      'id' => @last_user_id_num,
       'name' => user_name
     }
   end
@@ -28,7 +29,8 @@ class RecipeData
     File.open(file_name).read.split("\n").each do |line|
       @last_recipe_id_num += 1
       name, url = line.split(" ")
-      @recipes[@last_recipe_id_num] = {
+      @recipes << {
+        'id'      => @last_recipe_id_num,
         'name'    => name,
         'url'     => url,
         'user_id' => @last_user_id_num
@@ -56,23 +58,7 @@ class RecipeData
   end
 
   def recipes_by_user(user_id)
-    @recipes.values.select { |recipe| recipe['user_id'] == user_id }
-  end
-
-  def recipe_id_of(recipe_name)
-    @recipes.each do |id, recipe|
-      return id if recipe['name'] == recipe_name
-    end
-
-    -1
-  end
-
-  def user_id_of(user_name)
-    @users.each do |id, user|
-      return id if user['name'] == user_name
-    end
-
-    -1
+    @recipes.select { |recipe| recipe['user_id'] == user_id }
   end
 end
 
@@ -86,11 +72,11 @@ recipes = RecipeData.new
   recipes.add_recipe_file(file_name)
 end
 
-recipes.users.each do |user_id, user|
+recipes.users.each do |user|
   puts "ユーザー名: #{user['name']}"
-  recipes.recipes_by_user(user_id).each do |recipe|
-    if id_num_opt.nil? || (recipes.recipe_id_of(recipe['name']) == id_num_opt)
-      puts "#{recipe['name']} #{recipe['url']}"
+  recipes.recipes_by_user(user['id']).each do |recipe|
+    if id_num_opt.nil? || (recipe['id'] == id_num_opt)
+      puts "#{recipe['id']} #{recipe['name']} #{recipe['url']}"
     end
   end
   puts ""
