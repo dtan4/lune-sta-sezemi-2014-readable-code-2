@@ -1,13 +1,17 @@
 #!/usr/bin/env ruby
 
-require 'pry'
+require 'optparse'
 
-user = ARGV[0]
-file_name = ARGV[1]
-id_num_opt = ARGV.size.odd? ? ARGV.last.to_i : nil
+user_id = nil
+recipe_id = nil
+
+OptionParser.new do |opts|
+  opts.on("--user_id VAL" "user id") { |val| user_id = val.to_i }
+  opts.on("--recipe_id VAL" "user id") { |val| recipe_id = val.to_i }
+end.parse!
 
 class RecipeData
-  attr_reader :users
+  attr_reader :users, :recipes
 
   def initialize
     @users = []
@@ -42,23 +46,27 @@ class RecipeData
 
   end
 
-  def get_recipe(id_num)
-    name = @recipes[id_num]['name']
-    url = @recipes[id_num]['url']
-    user_id = @recipes[id_num]['user_id']
-    return ["#{id_num}: #{name} #{url}"]
-  end
-
-  def get_all_recipe
-    result = []
-    @recipes.keys.each do |id_num|
-      result << get_recipe(id_num)
-    end
-    return result.flatten
-  end
-
-  def recipes_by_user(user_id)
+  def recipes_by_user_id(user_id)
     @recipes.select { |recipe| recipe['user_id'] == user_id }
+  end
+
+  def recipe_by_id(recipe_id)
+    @recipes.select { |recipe| recipe['id'] == recipe_id }.first
+  end
+
+  def user_by_id(user_id)
+    @users.select { |user| user['id'] == user_id }.first
+  end
+
+  def show_recipes_by_user_id(user_id, recipe_id)
+    user = user_by_id(user_id)
+    puts "ユーザー名: #{user['id']}: #{user['name']}"
+    recipes_by_user_id(user['id']).each do |recipe|
+      if recipe_id.nil? || (recipe['id'] == recipe_id)
+        puts "#{recipe['id']} #{recipe['name']} #{recipe['url']}"
+      end
+    end
+    puts ""
   end
 end
 
@@ -74,12 +82,10 @@ end
 
 id_num_opt = ARGV.size.odd? ? ARGV.last.to_i : nil
 
-recipes.users.each do |user|
-  puts "ユーザー名: #{user['id']}: #{user['name']}"
-  recipes.recipes_by_user_id(user['id']).each do |recipe|
-    if id_num_opt.nil? || (recipe['id'] == id_num_opt)
-      puts "#{recipe['id']} #{recipe['name']} #{recipe['url']}"
-    end
+if user_id
+  recipes.show_recipes_by_user_id(user_id, recipe_id)
+else
+  recipes.users.each do |user|
+    recipes.show_recipes_by_user_id(user['id'], recipe_id)
   end
-  puts ""
 end
