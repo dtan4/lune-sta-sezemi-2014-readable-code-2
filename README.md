@@ -5,4 +5,4 @@ lune-sta-sezemi-2014-readable-code-2
 
 実行方法
 ---------------------------------
-% ./recipe.rb recipe-data.txt
+* % ./recipe.rb recipe-data.txt id
