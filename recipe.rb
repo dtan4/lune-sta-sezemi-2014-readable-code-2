@@ -1,7 +1,8 @@
 #!/usr/bin/ruby
 
-file_name = ARGV[0]
-id_num_opt = ARGV[1]
+user = ARGV[0]
+file_name = ARGV[1]
+id_num_opt = ARGV[2]
 
 class RecipeDatabase
 
@@ -37,5 +38,5 @@ end
 
 recipes = RecipeDatabase.new
 recipes.add_recipe_file(file_name)
+puts "ユーザー名: #{user}"
 id_num_opt.nil? ? recipes.puts_all_recipe : recipes.puts_recipe(id_num_opt.to_i)
-
