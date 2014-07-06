@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 
 user = ARGV[0]
 file_name = ARGV[1]
