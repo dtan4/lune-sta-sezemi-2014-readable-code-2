@@ -13,15 +13,18 @@ class RecipeDatabase
   def add_recipe_file(file_name)
     File.open(file_name).read.split("\n").each do |line|
       @last_id_num += 1
+      name, url = line.split(" ")
       @recipes[@last_id_num] = {
-        'name' => line
+        'name' => name,
+        'url' => url
       }
     end
   end
 
   def puts_recipe(id_num)
     name = @recipes[id_num]['name']
-    puts "#{id_num}: #{name}"
+    url = @recipes[id_num]['url']
+    puts "#{id_num}: #{name} #{url}"
   end
 
   def puts_all_recipe
