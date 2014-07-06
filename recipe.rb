@@ -73,7 +73,7 @@ recipes = RecipeData.new
 end
 
 recipes.users.each do |user|
-  puts "ユーザー名: #{user['name']}"
+  puts "ユーザー名: #{user['id']}: #{user['name']}"
   recipes.recipes_by_user(user['id']).each do |recipe|
     if id_num_opt.nil? || (recipe['id'] == id_num_opt)
       puts "#{recipe['id']} #{recipe['name']} #{recipe['url']}"
