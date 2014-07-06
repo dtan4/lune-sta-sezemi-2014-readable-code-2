@@ -72,9 +72,11 @@ recipes = RecipeData.new
   recipes.add_recipe_file(file_name)
 end
 
+id_num_opt = ARGV.size.odd? ? ARGV.last.to_i : nil
+
 recipes.users.each do |user|
   puts "ユーザー名: #{user['id']}: #{user['name']}"
-  recipes.recipes_by_user(user['id']).each do |recipe|
+  recipes.recipes_by_user_id(user['id']).each do |recipe|
     if id_num_opt.nil? || (recipe['id'] == id_num_opt)
       puts "#{recipe['id']} #{recipe['name']} #{recipe['url']}"
     end
